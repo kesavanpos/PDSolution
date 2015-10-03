@@ -1,0 +1,280 @@
+﻿@model IEnumerable<Pricing.Controllers.CustomTabModel>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Power Decision</title>
+    @*<script src="../../Scripts/jquery-1.9.1.min.js" type="text/javascript"></script>*@    
+    <script src="~/Scripts/jquery-1.9.1.js"></script>
+     <script src="~/Scripts/spin.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>    
+    <link href="~/Styles/jquery-ui.css" rel="stylesheet" />    
+    <link href="@Href("~/Styles/site.css")" rel="stylesheet" />
+    <link href="~/Styles/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+    <link href="~/Styles/jquery-ui.css" rel="stylesheet" />
+    @*<link href="~/Styles/top.css" rel="stylesheet" />
+    <link href="~/Styles/ui.jqgrid.css" rel="stylesheet" />*@
+
+    @*<script src="~/Scripts/JQGrid/grid.locale-en.js"></script>
+    <script src="~/Scripts/JQGrid/jquery-1.11.0.min.js"></script>
+    <script src="~/Scripts/JQGrid/jquery.jqGrid.min.js"></script>
+    <script src="~/Scripts/JQGrid/jquery.jqGrid.src.js"></script>    
+    <script src="~/Scripts/skinable_tabs.min.js"></script>*@
+    @*<link href="~/Styles/demos.css" rel="stylesheet" />*@
+    <style>
+        .ddlPowerdecision { padding-top:10px;font-size:12px;}
+
+        .ddlFilter{ width:195px}
+
+        .classtxtFilter{font-size:12px;font-weight:bolder;}
+
+        div#spinner
+        {
+            display: none;
+            width:100px;
+            height: 100px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            background:url(../../Images/spinnergif.gif) no-repeat center #fff;
+            text-align:center;
+            padding:10px;
+            font:normal 16px Tahoma, Geneva, sans-serif;
+            border:1px solid #666;
+            margin-left: -50px;
+            margin-top: -50px;
+            z-index:2;
+            overflow: auto;
+      }
+
+         #loading
+    {
+        display:none;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        background:rgba(255,255,255,0.8);
+        z-index:1000;
+    }
+
+    #loadingcontent
+    {
+        display:table;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+    }
+
+    #loadingspinner
+    {
+        display: table-cell;
+        vertical-align:middle;
+        width: 100%;
+        text-align: center;
+        font-size:larger;
+        padding-top:80px;
+    }
+
+    /*.ui-tabs .ui-tabs-nav
+    {
+        background-color:lightblue;
+    }
+
+    .ui-widget-content a
+    {
+        font-size:small
+    }*/
+
+    </style>
+</head>
+
+<body style="background-color: rgba(195, 226, 239, 0.18);">
+
+    <div id="loading">
+        <div id="loadingcontent">
+            <p id="loadingspinner">
+                Loading...
+            </p>
+        </div>
+    </div>
+
+    <div id="startdiv" style="padding-left:10px">
+
+        <p><h2>Power Decision</h2></p>        
+        <form id="form1" style="padding-top:20px">
+
+
+            <div class="tabs_holder" id="tabs">
+                <ul>
+                    @foreach (var item in Model)
+                    {
+                        <li><a href=#@item.tabName>@item.tabName</a></li>
+                    }
+                </ul>
+                @foreach (var item in Model)
+                {
+                    <div class="content_holder" id=@item.tabName>   
+                        
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label class="classtxtFilter">Field Name</label>
+                                        <p>@Html.DropDownList("SelectedFieldName", (SelectList)ViewBag.FieldNames, new { id = "wellName", @class = "form-control ddlFilter", multiple = "multiple" })</p>
+                                    </td>
+
+                                    <td>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </td>
+
+                                    <td>
+                                        <label class="classtxtFilter">BoreholeName</label>
+                                        <p>@Html.DropDownList("SelectedBoreHoleName", (SelectList)ViewBag.BoreHoleName, new { id = "BoreHoleName", @class = "form-control ddlFilter", multiple = "multiple" }) </p>
+                                    </td>
+
+                                    <td>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </td>
+
+                                    <td>
+                                        <label class="classtxtFilter">BoreholeStatus</label>
+                                        <p>@Html.DropDownList("SelectedBoreHoleStatus", (SelectList)ViewBag.BoreholeStatus, new { id = "Status", @class = "form-control ddlFilter", multiple = "multiple" })  </p>
+                                    </td>
+
+                                    <td>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </td>
+
+                                    <td>
+                                        <label class="classtxtFilter">BoreholeClass</label>
+                                        <p>@Html.DropDownList("SelectedBoreHoleClass", (SelectList)ViewBag.BoreholeClass, new { id = "Class", @class = "form-control ddlFilter", multiple = "multiple" })</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        
+                                             
+                        @if (item.tabName == "Well Information")
+                        {
+                            @Html.Partial("_jgrid")
+                        }
+                    </div>
+                }
+            </div>
+
+            <!--
+            <div >
+                <ul>
+                    <li><a href="#your-tab-id-1">Well Information</a></li>
+                    <li class="tab_selected"><a href="#your-tab-id-2">LogViewer</a></li>
+                </ul>
+                <div >
+                    <div id="your-tab-id-1">
+                        
+                    </div>
+                    <div id="your-tab-id-2">
+                        Some content tab 2
+                    </div>
+                </div> /.content_holder 
+                -->
+            </div>
+        </form>
+
+
+</div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('#tabs').tabs();
+
+        try {
+            $('.tabs_holder').skinableTabs({
+                effect: 'basic_display',
+                skin: 'skin7',
+                position: 'top'
+            });
+        }
+        catch (e) {
+            alert(e);
+        }
+        
+
+        $(".ddlFilter").change(function () {
+            var fieldNames = [];
+            var BoreHoleName = [];
+            var status = [];
+            var classes = [];
+            $('#wellName option:selected').each(function () {
+                //data.push({ name: this.text, value: this.value });
+                fieldNames.push(this.text);
+            })
+
+            $('#BoreHoleName option:selected').each(function () {
+                BoreHoleName.push(this.text);
+            })
+
+            $('#Status option:selected').each(function () {
+                status.push(this.text);
+            })
+
+            $('#Class option:selected').each(function () {
+                classes.push(this.text);
+            })
+
+
+            if (fieldNames.length > 0 || BoreHoleName.length > 0 || status.length > 0 || classes.length > 0) {
+
+                //showProgress();
+                $("#loading").fadeIn();
+                var opts = {
+                    lines: 12, // The number of lines to draw
+                    length: 7, // The length of each line
+                    width: 4, // The line thickness
+                    radius: 10, // The radius of the inner circle
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 60, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false // Whether to use hardware acceleration
+                };
+                var trget = document.getElementById('loading');
+                var spnr = new Spinner(opts).spin(trget);
+
+                $.ajax({
+                    cache: false,
+                    type: 'GET',
+                    url: '@Url.Action("Search", "Home")',
+                    data: { FieldName: JSON.stringify(fieldNames), boreholeName: JSON.stringify(BoreHoleName), Status:JSON.stringify(status), Class: JSON.stringify(classes)},
+                    success: function (result) {
+                        $('#gridContent').html(result);
+                        //alert('Records filtered successfully !');
+                        $('#txtSearch').val('');
+                        $('#bhSearch').val('');
+                        $('#bhStatus').val('');
+                        $('#bhClass').val('');                        
+                        $("#loading").hide();
+                    },
+                    error: function (result) {
+                        //alert(result);
+                        //$('#startdiv').fadeOut('slow');
+                    }
+                });
+            }
+            else {
+                alert('Please select options for filtering');
+            }
+
+           
+        });
+    });
+</script>

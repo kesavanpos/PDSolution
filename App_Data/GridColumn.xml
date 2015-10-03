@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<GCColumn>
+  <Column>
+    <Name>WELL_NAME</Name>
+  </Column>
+  <Column>
+    <Name>TRACE_TYPE</Name>
+  </Column>
+  <Column>
+    <Name>SOURCE</Name>
+  </Column>  
+  <Column>   
+    <Name>VERSION</Name>
+  </Column>
+</GCColumn>
+

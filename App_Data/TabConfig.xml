@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Tabs>
+  <Tab>
+    <Name>Well Information</Name>    
+  </Tab>
+  <Tab>
+    <Name>Field</Name>
+  </Tab>
+  <Tab>
+    <Name>SomeOtherTab</Name>
+  </Tab>
+  <Tab>
+    <Name>Pricing</Name>
+  </Tab>
+  <Tab>
+    <Name>Pricing2</Name>
+  </Tab>
+
+</Tabs>

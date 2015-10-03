@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "GetEmpInfo";
+}
+<html>
+<head>
+    <title>EmployeeInformation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    @*<link rel="stylesheet" href="~/styles/layout.css" type="text/css" />*@
+    <link href="~/styles/ui.jqgrid.css" rel="stylesheet" />
+    <link href="themes/redmond/jquery-ui-1.8.2.custom.css" rel="stylesheet" type="text/css" />
+    <link href="~/Styles/top.css" rel="stylesheet" />
+    <script src="~/Scripts/JQGrid/jquery-1.11.0.min.js"></script>
+    <script src="~/Scripts/JQGrid/jquery.jqGrid.min.js"></script>
+    <script src="~/Scripts/JQGrid/grid.locale-en.js"></script>
+    <link href="~/styles/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+    
+    <script src="~/Scripts/skinable_tabs.min.js"></script>
+
+</head>
+<body style="background-color: #f2f5f7">
+    <form id="form1">
+        <table id="jsonmap"></table>
+        <div id="pjmap">
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                var ColN, ColM, ColD, capEN;
+
+                $.ajax({
+                    url: 'Home/getHeaderData',
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    data: {},
+                    dataType: "json",
+                    success: function (data, st) {
+                            ColN = data.rowsHead;//jqgrid heading data
+                            ColM = data.rowsM; // its column model
+                            //ColD = data.rows; // Data
+                            CreateGrid();
+                        },
+                    error: function () {
+                        alert("Error with AJAX callback");
+                    }
+                });
+
+
+                function CreateGrid()
+                {
+                    $("#jsonmap").jqGrid({
+                        url: '/Home/GetDataForEmployeeJQGrid',
+                        multiselect: true,
+                        datatype: 'json',
+                        //colNames: ['BoreHoleId', 'BoreHoleName', 'PublishingDate', 'CompletionDate'],
+                        colNames: ColN,
+                        colModel: ColM,
+                        rowNum: 10,
+                        rowList: [2, 5, 10, 15],                                          
+                        pager: '#pjmap',
+                        toppager: true,                        
+                        cloneToTop: true,
+                        sortname: 'UserId',
+                        loadonce:true,
+                        sortorder: "desc",                        
+                        viewrecords: true,
+                        jsonReader: {
+                            repeatitems: false
+                        },
+                        width: 900,
+                        caption: 'Power Decisions Information',
+                        height: '30%',
+                        editurl: '/Home/EditEmployeeInformation'
+                    });
+
+                    $('#jsonmap').jqGrid('navGrid', '#pjmap', { add: false, edit: false, del: false, search: false, refresh: false, cloneToTop: true, showQuery: true, multipleSearch: true, multipleGroup: true });
+                    
+                    $('#jsonmap').jqGrid('navButtonAdd', '#' + "jsonmap" + '_toppager_left', { // "#list_toppager_left"
+                        caption: "ExportPDF",
+                        buttonicon: 'ui-icon-bookmark',
+                        onClickButton: function () {
+                        }
+                    });
+
+                    function ExportDataToExcel(tableCtrl) {
+                        debugger;
+                        //  Export the data from our jqGrid into a "real" Excel 2007 file
+                        //ExportJQGridDataToExcel(tableCtrl, "CustomerOrders.xlsx");
+
+                        $.ajax({
+                            url: 'Home/ExportExcel',
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            data: {},
+                            dataType: "json",
+                            success: function (data) {
+                                alert('test');
+                            },
+                            error: function (data) {
+                                debugger
+                                alert("Error with AJAX callback");
+                            }
+                        });
+
+                    }
+
+                    $('#jsonmap').jqGrid('navButtonAdd', '#' + "jsonmap" + '_toppager_left', { // "#list_toppager_left"
+                        caption: "ExportExcel",
+                        buttonicon: 'ui-icon-plusthick',
+                        onClickButton: function () {
+                            ExportDataToExcel("#jsonmap");
+                        }
+                    });
+                    
+                    // remove some double elements from one place which we not need double
+                    var topPagerDiv = $('#' + "jsonmap" + '_toppager')[0];         // "#list_toppager"
+                    $("#add_" + "jsonmap" + "_top", topPagerDiv).remove();
+                    $("#edit_" + "jsonmap" + "_top", topPagerDiv).remove();        // "#edit_list_top"
+                    $("#del_" + "jsonmap" + "_top", topPagerDiv).remove();         // "#del_list_top"
+                    $("#search_" + "jsonmap" + "_top", topPagerDiv).remove();      // "#search_list_top"
+                    $("#refresh_" + "jsonmap" + "_top", topPagerDiv).remove();     // "#refresh_list_top"
+                    $("#" + "jsonmap" + "_toppager_center", topPagerDiv).remove(); // "#list_toppager_center"
+                    $(".ui-paging-info", topPagerDiv).remove();
+
+                    //var bottomPagerDiv = $("div#pjmap")[0];
+                    //$("#add_" + "jsonmap", bottomPagerDiv).remove();
+                }
+            });
+
+
+        </script>
+    </form>
+</body>
+</html>

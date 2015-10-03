@@ -1,0 +1,84 @@
+﻿<body>
+
+    <style>
+        .tablestyle {  width: 900px; border-collapse: separate;
+                       font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	                    font-size: 12px;
+                        color: #669;
+                        line-height: 1.6em;
+                        border-spacing: 1px;
+                    }
+            
+        /*#988F21*/
+        .tablestyle th, .tablestyle td { border : 0px solid ;padding : 2px; font-size : small ; text-align : center; font-family:'Times New Roman';display:normal}
+
+        .headerstyle {background-color : #E8E8E8;font-weight:bold;text-align:center;color:#FFFFFF;font-family:'Times New Roman', Times, serif;font-size:20px}
+
+        /*.altRowStyle {background-color : dodgerblue;color : #000;}*/
+
+        .divInfoStyle { margin: 4px; width: 900px; border-collapse: separate; align-items:center;padding-left:350px }
+
+        .name { width: 50px;}
+
+        .boreHoleName {width : 300px;font-size:50px}
+
+    .row
+    {
+        background: #fff;
+    }
+    .header
+    {
+        background: space;
+        background-color : rgb(220, 241, 249);
+        font-size:200px
+    }
+    .alt
+    {
+        background-color : #F5F7F9
+        /*background: #d6e3f2;
+        background-color : lightgray*/
+    }
+    .webGrid
+    {
+        border: 1px solid #bbb;
+    }
+    .webGrid th, .webGrid td
+    {
+            padding-left: 10px;
+    }        
+
+    </style>
+
+    @{
+        Pricing.Models.BoreHole pricing = new Pricing.Models.BoreHole();
+    }
+    @{
+        var gd = new WebGrid(Model, canPage: true, rowsPerPage: 10, selectionFieldName: "selectedRow", ajaxUpdateContainerId: "gridContent");
+        gd.Pager(WebGridPagerModes.NextPrevious);}
+    <div id="gridContent" style="background-color:lightblue;padding-top:-80px">
+        @gd.GetHtml(tableStyle: "tablestyle",
+                         headerStyle: "header",
+                     alternatingRowStyle: "alt",
+                     selectedRowStyle: "select",
+                     rowStyle: "row",
+                columns: gd.Columns(
+                         gd.Column("BoreHoleId", format: (item) => item.GetSelectLink(Convert.ToString(item.BoreHoleId))),
+                                  gd.Column("BoreHoleName", "Borehole Name", style: "boreHoleName"),
+                         gd.Column("pudDate", "pudDate", style: "description", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.pudDate)),
+                                  gd.Column("CompletionDate", "CompletionDate", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.CompletionDate)),
+                gd.Column("Class", "Class"),
+                gd.Column("Status", "Status")
+         ))
+        @if (gd.HasSelection)
+        {
+            pricing = (Pricing.Models.BoreHole)gd.Rows[gd.SelectedIndex].Value;
+            <div class="divInfoStyle">
+                <b>BoreHoleId : </b> @pricing.BoreHoleId<br />
+                <b>BoreHoleName : </b> @pricing.BoreHoleName<br />
+                <b>Status : </b>  @pricing.Status<br />
+                <b>Class : </b> @pricing.Class<br />
+            </div>
+
+        }
+    </div>
+</body>
